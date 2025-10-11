@@ -64,7 +64,23 @@ The plan is to build Zenith using C++. To contribute to the core language, you w
 
 ### Building from Source
 
-Zenith is currently in the early stages of design and development. Build instructions will be available here once the first version of the interpreter is functional. Stay tuned!
+This project uses CMake to generate build files.
+
+1. **Clone the repository:**
+
+    ```sh
+    git clone https://github.com/MyCompilerHatesMe/Zenith.git
+    cd Zenith
+    ```
+
+2. **Configure and build with CMake:**
+
+    ```sh
+    cmake -S . -B build
+    cmake --build build
+    ```
+
+3. The `zenith` executable will be located in the `build/bin/` directory.
 
 ---
 
