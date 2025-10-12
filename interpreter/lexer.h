@@ -56,6 +56,7 @@ class Lexer {
         Token identifier();
 
         Token makeToken(TokenType type) const;
+        Token makeToken(TokenType type, std::string lexeme) const;
 
 };
 

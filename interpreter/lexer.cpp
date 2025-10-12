@@ -71,13 +71,9 @@ bool Lexer::isAlphaNumeric(char c) const{
 }
 
 Token Lexer::string(){
-    start = current; // store where the string starts. you called the method so it must be here
+    // just realised start = current should be in scanToken not here
     while(peek() != '"' && !isAtEnd()){
         if(peek() == '\n') line++;
-        if(peek() == '"'){
-            advance(); // remove the " from the stream
-            return makeToken(STRING); // make token will figure out where we are right now and return what we need
-        }
         advance();
     }
 
@@ -85,15 +81,15 @@ Token Lexer::string(){
         cerr << "Unterminated string at line " << line << "\n";
         std::exit(1);  // error means fuck you get out
     }
+
+    // consume the " from the stream
+    advance();
+    // token will figure everything else
+    return makeToken(STRING);
 }
 
 Token Lexer::number(){
-    start = current;
     while(isDigit(peek())){
-        if(peek() == '\n'){
-            cerr << "Missing ';' at line" << line << "\n";
-            std::exit(1);
-        }
         advance();
     }
     return makeToken(NUMBER);
@@ -102,10 +98,6 @@ Token Lexer::number(){
 Token Lexer::identifier(){
     start = current;
     while(isAlphaNumeric(peek())){
-        if(peek() == '\n'){
-            cerr << "Missing ';' at line " << line << "\n";
-            std::exit(1);
-        }
         advance();
     }
 
@@ -117,7 +109,22 @@ Token Lexer::identifier(){
     //if its in the map return a keyword type
     if(it != keywords.end()) return makeToken(it->second);
     //if its not in the map, return an identifier
-    return makeToken(IDENTIFIER);
+    return makeToken(IDENTIFIER, text);
 }
 
-//TODO: makeToken.
+Token Lexer::makeToken(TokenType type) const{
+    return {
+        type,
+        source.substr(start, current - start),
+        line,
+    };
+}
+
+// one less method call. yes. i care.
+Token Lexer::makeToken(TokenType type, std::string lexeme) const{
+    return{
+        type,
+        lexeme,
+        line,
+    };
+}
