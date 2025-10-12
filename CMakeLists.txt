@@ -13,7 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Add the main executable target
 add_executable(zenith
-    interpreter/interpreter.cpp
+    interpreter/interpreter.cpp interpreter/lexer.cpp
 )
 
 # As your project grows, you can add more source files like this:

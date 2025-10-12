@@ -6,6 +6,14 @@
 using std::cerr;
 using std::vector;
 
+
+Lexer::Lexer(const std::string& source) : source(source) {
+    // the member initializer list ": source(source)" does all the work.
+    // it directly constructs the class's 'source' member with the
+    // 'source' string that was passed into the constructor.
+}
+
+
 vector<Token> Lexer::scanTokens() {
     vector<Token> tokens;
 
@@ -189,11 +197,19 @@ Token Lexer::identifier() {
 }
 
 Token Lexer::makeToken(TokenType type) const {
-    return {
-        type,
-        source.substr(start, current - start),
-        line,
-    };
+    if(type != END_OF_FILE){
+        return {
+            type,
+            source.substr(start, current - start),
+            line,
+        };
+    }else{
+        return {
+            type,
+            "EOF",
+            line,
+        };
+    }
 }
 
 // one less method call. yes. i care.
