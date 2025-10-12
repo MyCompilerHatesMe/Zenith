@@ -86,14 +86,14 @@ This project uses CMake to generate build files.
 
 ## Usage
 
-Once the interpreter is ready, you will be able to run Zenith programs from source files (e.g., with a `.zn` extension).
+Once the interpreter is ready, you will be able to run Zenith programs from source files (e.g., with a `.zen` extension).
 
 ### A Taste of Zenith
 
 Here is what "Hello, World!" might look like in Zenith. *Note: This syntax is provisional and may change as development progresses.*
 
 ```cpp
-// hello.zn
+// hello.zen
 print("Hello, World!");
 ```
 
