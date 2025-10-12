@@ -1,9 +1,7 @@
-#include <iostream>
-
-using std::cout;
-using std::endl;
+#include <stdio.h>
+#include "lexer.h"
 
 int main(){
-    cout << "Hello, Zenith!" << endl;
+    printf("Hello, Zenith!\n");
     return 0;
 }
