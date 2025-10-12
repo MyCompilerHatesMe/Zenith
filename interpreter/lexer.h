@@ -13,9 +13,9 @@ class Lexer {
 
     private: 
         std::string source;
-        int start = 0;
-        int current = 0;
-        int line = 1;
+        int start = 0; // starting index of any given token
+        int current = 0; // current index of array
+        int line = 1; //line number
 
 
         // navigation methods

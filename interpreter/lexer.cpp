@@ -1,4 +1,8 @@
 #include "lexer.h"
+#include <iostream>
+#include <cstdlib>
+
+using std::cerr;
 
 Token Lexer::scanToken() {
 
@@ -23,6 +27,8 @@ Token Lexer::scanToken() {
     // if alpha return identifier()
     // else error  
 }
+
+/// Navigation functions
 
 char Lexer::advance(){
     return source[current++];
@@ -49,6 +55,9 @@ char Lexer::peekNext() const{
     return source[current + 1];
 }
 
+
+/// Classification functions
+
 bool Lexer::isDigit(char c) const{
     return c >= '0' && c <= '9';
 }
@@ -59,4 +68,21 @@ bool Lexer::isAlpha(char c) const{
 
 bool Lexer::isAlphaNumeric(char c) const{
     return isAlpha(c) || isDigit(c);
+}
+
+Token Lexer::string(){
+    start = current; // store where the string starts. you called the method so it must be here
+    while(peek() != '"' && !isAtEnd()){
+        if(peek() == '\n') line++;
+        advance();
+        if(peek() == '"'){
+            advance();
+            return makeToken(STRING); // make token will figure out where we are right now and return what we need
+        }
+    }
+
+    if(isAtEnd()){
+        cerr << "Unterminated string at line " << line << "\n";
+        std::exit(1);  // error means fuck you get out
+    }
 }
