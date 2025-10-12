@@ -24,3 +24,39 @@ Token Lexer::scanToken() {
     // else error  
 }
 
+char Lexer::advance(){
+    return source[current++];
+}
+
+bool Lexer::match(char expected){
+    if(peek() == expected){
+        advance();
+        return true;
+    }
+    return false;
+}
+
+bool Lexer::isAtEnd() const {
+    return current >= source.length();
+}
+
+char Lexer::peek() const{
+    if(isAtEnd()) return '\0';
+    return source[current];
+}
+char Lexer::peekNext() const{
+    if(current + 1 >= source.length()) return '\0';
+    return source[current + 1];
+}
+
+bool Lexer::isDigit(char c) const{
+    return c >= '0' && c <= '9';
+}
+
+bool Lexer::isAlpha(char c) const{
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
+bool Lexer::isAlphaNumeric(char c) const{
+    return isAlpha(c) || isDigit(c);
+}
