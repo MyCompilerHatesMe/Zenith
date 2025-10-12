@@ -105,10 +105,10 @@ This section outlines the proposed syntax and features for Zenith.
 
 ### Functions
 
-Functions will be first-class citizens, declared with the `fn` keyword.
+Functions will be first-class citizens, declared with the `fun` keyword.
 
 ```js
-fn add(a, b) {
+fun add(a, b) {
     return a + b;
 }
 
@@ -121,7 +121,7 @@ print(result); // Outputs: 15
 Standard `if`/`else` blocks will be used for conditional logic.
 
 ```js
-let number = 10;
+int number = 10;
 if (number > 5) {
     print("Number is greater than 5.");
 } else {
