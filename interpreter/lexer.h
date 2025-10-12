@@ -11,8 +11,8 @@ using keywordMap_t = std::unordered_map<std::string, TokenType>;
 class Lexer {
     public: 
         Lexer(const std::string& source);
-        Token scanToken();
-
+        std::vector<Token> scanTokens();
+        
     private: 
         std::string source;
         int start = 0; // starting index of any given token
@@ -37,26 +37,30 @@ class Lexer {
             {"while", WHILE},
             {"null", NIL},
         };
-
+        
+        
         // navigation methods
         char advance();
         bool match(char expected);
         bool isAtEnd() const;
         char peek() const;
         char peekNext() const;
+        void skipWhitespace();
 
         // classification methods
         bool isDigit(char c) const;
         bool isAlpha(char c) const;
         bool isAlphaNumeric(char c) const;
-
+        
         // token methods
         Token string();
         Token number();
         Token identifier();
-
+        
         Token makeToken(TokenType type) const;
         Token makeToken(TokenType type, std::string lexeme) const;
+        
+        Token scanToken();
 
 };
 

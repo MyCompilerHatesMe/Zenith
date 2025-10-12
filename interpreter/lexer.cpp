@@ -1,36 +1,81 @@
 #include "lexer.h"
 #include <iostream>
 #include <cstdlib>
+#include <vector>
 
 using std::cerr;
+using std::vector;
+
+vector<Token> Lexer::scanTokens() {
+    vector<Token> tokens;
+
+    while(true) {
+        Token token = scanToken();
+
+        tokens.push_back(token);
+
+        if(token.type == END_OF_FILE)
+            break; 
+    }
+
+    return tokens;
+}
+
 
 Token Lexer::scanToken() {
 
-    // loop through everything
-    // consume and delete whitespace \t, \r
-    // if \n increment line
-
-    //if // is found, skip to end of line
-
-    // after all meaningless tokens are consumed
-    // check if we're at EOF return makeToken(END_OF_FILE)
-
-    // start -> current index
-    // consume a character advance()
+    // skip whitespace woah, who would've thought
+    skipWhitespace();
     
+    // check if we're at EOF return makeToken(END_OF_FILE)
+    if (isAtEnd()) return makeToken(END_OF_FILE);
+    
+    // start -> current index
+    start = current;
+
+    // consume a character advance()
+    char c = advance();
+
+    if(isAlpha(c)) return identifier();
+    if(isDigit(c)) return number();
+
+
     // switch (char) 
     // for single character tokens return makeToken(TokenType)
     // for mutlichar tokens, check next char with match()
+    switch (c) {
+        // single char tokens
+        case '(': return makeToken(LEFT_PAREN);
+        case ')': return makeToken(RIGHT_PAREN);
+        case '{': return makeToken(LEFT_BRACE);
+        case '}': return makeToken(RIGHT_BRACE);
+        case ',': return makeToken(COMMA);
+        case '.': return makeToken(DOT);
+        case '-': return makeToken(MINUS);
+        case '+': return makeToken(PLUS);
+        case ';': return makeToken(SEMICOLON);
+        case '*': return makeToken(STAR);
+        // skip whitespace handles comments
+        case '/': return makeToken(SLASH);
 
-    // if " return string()
-    // if digit return number()
-    // if alpha return identifier()
-    // else error  
+        // one or two char tokens
+        case '!': return makeToken(match('=') ? BANG_EQUAL : BANG);
+        case '=': return makeToken(match('=') ? EQUAL_EQUAL : EQUAL);
+        case '<': return makeToken(match('=') ? LESS_EQUAL : LESS);
+        case '>': return makeToken(match('=') ? GREATER_EQUAL : GREATER);
+
+        // string
+        case '"': return string();
+    }
+
+    // uhhhh what? how did you get here
+    cerr << "Unexpected characater '" << c << "' at line " << line << "\n";
+    std::exit(1);
 }
 
 /// Navigation functions
 
-char Lexer::advance(){
+char Lexer::advance() {
     return source[current++];
 }
 
@@ -55,10 +100,42 @@ char Lexer::peekNext() const{
     return source[current + 1];
 }
 
+void Lexer::skipWhitespace() {
+    while (true) {
+        char c = peek();
+        switch (c) {
+            // actual empty space
+            case ' ':
+            case '\r':
+            case '\t':
+                advance();
+                break;
+            case '\n':
+                line++;
+                advance();
+                break;
+
+            // comment case
+            case '/':
+                if (peekNext() == '/') {
+                    // comment so skip to EOL
+                    while (peek() != '\n' && !isAtEnd()) advance();
+                } 
+                // division operator
+                else return;
+                break;
+
+            // not a whitespace character. give it back to scanToken();
+            default:
+                return;
+        }
+    }
+}
+
 
 /// Classification functions
 
-bool Lexer::isDigit(char c) const{
+bool Lexer::isDigit(char c) const {
     return c >= '0' && c <= '9';
 }
 
@@ -66,11 +143,11 @@ bool Lexer::isAlpha(char c) const{
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
-bool Lexer::isAlphaNumeric(char c) const{
+bool Lexer::isAlphaNumeric(char c) const {
     return isAlpha(c) || isDigit(c);
 }
 
-Token Lexer::string(){
+Token Lexer::string() {
     // just realised start = current should be in scanToken not here
     while(peek() != '"' && !isAtEnd()){
         if(peek() == '\n') line++;
@@ -88,15 +165,14 @@ Token Lexer::string(){
     return makeToken(STRING);
 }
 
-Token Lexer::number(){
+Token Lexer::number() {
     while(isDigit(peek())){
         advance();
     }
     return makeToken(NUMBER);
 }
 
-Token Lexer::identifier(){
-    start = current;
+Token Lexer::identifier() {
     while(isAlphaNumeric(peek())){
         advance();
     }
@@ -112,7 +188,7 @@ Token Lexer::identifier(){
     return makeToken(IDENTIFIER, text);
 }
 
-Token Lexer::makeToken(TokenType type) const{
+Token Lexer::makeToken(TokenType type) const {
     return {
         type,
         source.substr(start, current - start),
@@ -121,7 +197,7 @@ Token Lexer::makeToken(TokenType type) const{
 }
 
 // one less method call. yes. i care.
-Token Lexer::makeToken(TokenType type, std::string lexeme) const{
+Token Lexer::makeToken(TokenType type, std::string lexeme) const {
     return{
         type,
         lexeme,
