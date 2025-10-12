@@ -4,8 +4,8 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "lexer.h"
-#include "token.h"
+#include "interpreter/lexer/lexer.h"
+#include "interpreter/token.h"
 
 using std::string;
 using std::ifstream;

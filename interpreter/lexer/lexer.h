@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "token.h"
+#include "interpreter/token.h"
 
 using keywordMap_t = std::unordered_map<std::string, TokenType>;
 
