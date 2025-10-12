@@ -22,20 +22,25 @@ struct LiteralExpression : Expression {
 };
 
 class Parser {
-    private:
-    std::vector<Token> tokens;
-    int current;
     public:
-    Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
-    // Parses the tokens and returns the root of the AST
-    std::unique_ptr<Expression> parseExpression();
+        Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
+        // Parses the tokens and returns the root of the AST
+        std::unique_ptr<Expression> parseExpression();
+    
     private:
+        std::vector<Token> tokens;
+        int current;
+        
+        // navigation
         Token peek() const;
         Token advance();
+        Token previous() const;
+        bool isAtEnd() const;
+
+        // checking and consuming
         bool match(TokenType type);
-        Token consume(TokenType type, const std::string& message);
         bool check(TokenType type) const;
-        bool isAtEnd();
+        Token consume(TokenType type, const std::string& message);
 
         //Levels of Precedence
         std::unique_ptr<Expression> parseAddition();
