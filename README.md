@@ -103,16 +103,6 @@ print("Hello, World!");
 
 This section outlines the proposed syntax and features for Zenith.
 
-### Variables
-
-Variables will be declared with the `let` keyword.
-
-```js
-let message = "This is a string.";
-let count = 100;
-
-```
-
 ### Functions
 
 Functions will be first-class citizens, declared with the `fn` keyword.
