@@ -1,4 +1,3 @@
-#define PARSER_h
 #include <string>
 #include <vector>
 #include <memory>
