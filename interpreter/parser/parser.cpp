@@ -7,6 +7,11 @@
 #include "interpreter/token.h"
 #include "parser.h"
 
+using std::cerr;
+using std::exit;
+using std::endl;
+using std::unique_ptr; //alr in the header, but its here now too
+
 // only use this to access token stream
 Token Parser::peek() const {
     return tokens.at(current);
@@ -42,6 +47,6 @@ bool Parser::check(TokenType type) const {
 Token Parser::consume(TokenType type, const std::string& message) {
     if (check(type)) return advance();
 
-    std::cerr << "[line " << peek().line << "] Error: " << message << std::endl;
-    std::exit(1);
+    cerr << "[line " << peek().line << "] Error: " << message << endl;
+    exit(1);
 }
