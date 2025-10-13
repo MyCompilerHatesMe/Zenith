@@ -2,9 +2,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include <string>
 
 using std::cerr;
 using std::vector;
+using std::exit;
 
 
 Lexer::Lexer(const std::string& source) : source(source) {
@@ -78,7 +80,7 @@ Token Lexer::scanToken() {
 
     // uhhhh what? how did you get here
     cerr << "Unexpected characater '" << c << "' at line " << line << "\n";
-    std::exit(1);
+    exit(1);
 }
 
 /// Navigation functions
@@ -164,7 +166,7 @@ Token Lexer::string() {
 
     if(isAtEnd()){
         cerr << "Unterminated string at line " << line << "\n";
-        std::exit(1);  // error means fuck you get out
+        exit(1);  // error means fuck you get out
     }
 
     // consume the " from the stream
@@ -186,6 +188,7 @@ Token Lexer::identifier() {
     }
 
     // find the identifiers contents.
+    // this has to be std::string cuz Lexer::string exists alr
     std::string text = source.substr(start, current - start);
 
     auto it = keywords.find(text);
