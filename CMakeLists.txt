@@ -15,7 +15,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_executable(zenith
     interpreter/interpreter.cpp
     interpreter/lexer/lexer.cpp
-    interpreter/parser/evaluator.cpp
+    interpreter/parser/parser.cpp
 )
 
 #As your project grows, you can add more source files like this:
