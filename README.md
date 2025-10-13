@@ -108,11 +108,11 @@ This section outlines the proposed syntax and features for Zenith.
 Functions will be first-class citizens, declared with the `fun` keyword.
 
 ```js
-fun add(a, b) {
+int fun add(a, b) {
     return a + b;
 }
 
-let result = add(5, 10);
+int result = add(5, 10);
 print(result); // Outputs: 15
 ```
 
