@@ -36,6 +36,10 @@ class Lexer {
             {"var", VAR},
             {"while", WHILE},
             {"null", NIL},
+            {"int", TYPE_INT},
+            {"string", TYPE_STRING},
+            {"bool", TYPE_BOOL},
+            {"char", TYPE_CHAR},
         };
         
         

@@ -23,8 +23,12 @@ enum TokenType {
     // keywords
     AND, CLASS, ELSE, FALSE,
     FUN, FOR, IF, NIL, OR,
-    PRINT, RETURN, SUPER, THIS, TRUE,
+    PRINT, RETURN, SUPER, THIS, TRUE, 
     VAR, WHILE,
+
+    // data types
+    TYPE_INT, TYPE_STRING, TYPE_BOOL,
+    TYPE_CHAR,
 
     // end of file
     END_OF_FILE,
