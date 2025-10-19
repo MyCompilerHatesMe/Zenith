@@ -45,7 +45,10 @@ class Parser {
         bool check(TokenType type) const;
         Token consume(TokenType type, const std::string& message);
 
-        //Levels of Precedence
+        //Levels of Precedence` 
+        /*Right now it is only on the basic arithmetic that includes +, -[Addition], *, /[Multiplication]
+        and then unary operator
+        */
         unique_ptr<Expression> parseAddition();
         unique_ptr<Expression> parseMultiplication();
         unique_ptr<Expression> parseUnary();
