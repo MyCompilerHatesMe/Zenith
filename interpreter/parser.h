@@ -38,10 +38,16 @@ class Parser {
         bool isAtEnd();
 
         //Levels of Precedence
-        std::unique_ptr<Expression> parseAddition();
-        std::unique_ptr<Expression> parseMultiplication();
-        std::unique_ptr<Expression> parseUnary();
-        std::unique_ptr<Expression> parsePrimary();
+        std::unique_ptr<Expression> parseAssignment();      // Handles: =
+        std::unique_ptr<Expression> parseLogicalOr();       // Handles: ||
+        std::unique_ptr<Expression> parseLogicalAnd();      // Handles: &&
+        std::unique_ptr<Expression> parseEquality();        // Handles: ==, !=
+        std::unique_ptr<Expression> parseComparison();      // Handles: <, >, <=, >=
+        std::unique_ptr<Expression> parseAddition();        // Handles: +, -
+        std::unique_ptr<Expression> parseMultiplication();  // Handles: *, /, %
+        std::unique_ptr<Expression> parseUnary();           // Handles: -, !
+        std::unique_ptr<Expression> parseCall();            // Handles: (), ., []
+        std::unique_ptr<Expression> parsePrimary();         // Handles: literals, identifiers, ()
 };
 
 #endif 
