@@ -23,7 +23,13 @@ struct UnaryExpression : Expression {
 struct LiteralExpression : Expression {
     Token op;
 };
-
+struct IdentifierExpression : Expression {
+    Token name;
+};
+struct AssignmentExpression : Expression {
+    Token name;
+    unique_ptr<Expression> value;
+};
 class Parser {
     public:
         Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
@@ -49,6 +55,7 @@ class Parser {
         /*Right now it is only on the basic arithmetic that includes +, -[Addition], *, /[Multiplication]
         and then unary operator
         */
+        unique_ptr<Expression> Assignment();
         unique_ptr<Expression> parseLogicalOr();
         unique_ptr<Expression> parseLogicalAnd();
         unique_ptr<Expression> parseEquality();
