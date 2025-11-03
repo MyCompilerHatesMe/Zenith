@@ -86,14 +86,14 @@ This project uses CMake to generate build files.
 
 ## Usage
 
-Once the interpreter is ready, you will be able to run Zenith programs from source files (e.g., with a `.zn` extension).
+Once the interpreter is ready, you will be able to run Zenith programs from source files (e.g., with a `.zen` extension).
 
 ### A Taste of Zenith
 
 Here is what "Hello, World!" might look like in Zenith. *Note: This syntax is provisional and may change as development progresses.*
 
 ```cpp
-// hello.zn
+// hello.zen
 print("Hello, World!");
 ```
 
@@ -103,26 +103,16 @@ print("Hello, World!");
 
 This section outlines the proposed syntax and features for Zenith.
 
-### Variables
-
-Variables will be declared with the `let` keyword.
-
-```js
-let message = "This is a string.";
-let count = 100;
-
-```
-
 ### Functions
 
-Functions will be first-class citizens, declared with the `fn` keyword.
+Functions will be first-class citizens, declared with the `fun` keyword.
 
 ```js
-fn add(a, b) {
+int fun add(a, b) {
     return a + b;
 }
 
-let result = add(5, 10);
+int result = add(5, 10);
 print(result); // Outputs: 15
 ```
 
@@ -131,7 +121,7 @@ print(result); // Outputs: 15
 Standard `if`/`else` blocks will be used for conditional logic.
 
 ```js
-let number = 10;
+int number = 10;
 if (number > 5) {
     print("Number is greater than 5.");
 } else {

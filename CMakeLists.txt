@@ -14,13 +14,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Add the main executable target
 add_executable(zenith
     interpreter/interpreter.cpp
+    interpreter/lexer/lexer.cpp
+    interpreter/parser/parser.cpp
 )
 
-# As your project grows, you can add more source files like this:
+#As your project grows, you can add more source files like this:
 # target_sources(zenith PRIVATE
-#     interpreter/lexer.cpp
-#     interpreter/parser.cpp
+    # interpreter/lexer/lexer.cpp
+    # interpreter/parser/parser.cpp
 # )
+
+target_include_directories(zenith PRIVATE ${CMAKE_SOURCE_DIR})
 
 # Enable common warnings for better code quality
 if(MSVC)
