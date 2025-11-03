@@ -55,7 +55,7 @@ class Parser {
         /*Right now it is only on the basic arithmetic that includes +, -[Addition], *, /[Multiplication]
         and then unary operator
         */
-        unique_ptr<Expression> Assignment();
+        unique_ptr<Expression> parseAssignment();
         unique_ptr<Expression> parseLogicalOr();
         unique_ptr<Expression> parseLogicalAnd();
         unique_ptr<Expression> parseEquality();

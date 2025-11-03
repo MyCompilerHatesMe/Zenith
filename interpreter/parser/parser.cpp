@@ -45,26 +45,6 @@ Token Parser::consume(TokenType type, const std::string& message) {
     std::cerr << "[line " << peek().line << "] Error: " << message << std::endl;
     std::exit(1);
 }
-unique_ptr<Expression> Parser::parseExpression(){
-    return parseAssignment();
-}
-unique_ptr<Expression> Parser:: parseAssignment(){
-    auto expr = parseLogicalOr();
-
-    if(match(TokenType::EQUAL)){
-        Token eq = previous();
-        auto value = parseAssignment();
-        
-        if(auto* identifier = dynamic_cast<IdentifierExpression*>(expr.get())) {
-        auto assignment  = std::make_unique<AssignmentExpression>();
-        assignment->name =identifier->name;
-        assignment->value = std::move(value);
-        return assignment;
-    }
-    throw std::runtime_error("Invalid Assignment")
-   }
-   return expr;
-}
 unique_ptr<Expression> Parser::parsePrimary() {
      if(check(TokenType::NUMBER) || check(TokenType::STRING)){
         Token t = advance();
@@ -179,4 +159,24 @@ unique_ptr<Expression> Parser::parseLogicalOr(){
         expr = std::move(bin);
     }
     return expr;
+}
+unique_ptr<Expression> Parser::parseExpression(){
+    return parseAssignment();
+}
+unique_ptr<Expression> Parser:: parseAssignment(){
+    auto expr = parseLogicalOr();
+
+    if(match(TokenType::EQUAL)){
+        Token eq = previous();
+        auto value = parseAssignment();
+        
+        if(auto* identifier = dynamic_cast<IdentifierExpression*>(expr.get())) {
+        auto assignment  = std::make_unique<AssignmentExpression>();
+        assignment->name =identifier->name;
+        assignment->value = std::move(value);
+        return assignment;
+        }
+    throw std::runtime_error("Invalid Assignment");
+       }
+   return expr;
 }
