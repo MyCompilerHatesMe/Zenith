@@ -58,6 +58,11 @@ unique_ptr<Expression> Parser::parsePrimary() {
         identifier->name = t;
         return identifier;
      }
+     else if (match(TokenType::LEFT_PAREN)){
+        auto expr = parseExpression();
+        consume(TokenType::RIGHT_PAREN, "Expect ')' after expression");
+        return expr;
+     }
      else{
         throw std::runtime_error("Invalid Token");
      }
