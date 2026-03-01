@@ -3,23 +3,24 @@
 [![License](https://img.shields.io/github/license/MyCompilerHatesMe/Zenith?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Status](https://img.shields.io/badge/status-in%20development-blue.svg?style=for-the-badge)](https://github.com/MyCompilerHatesMe/Zenith)
 
-A modern, simple, and fun toy programming language built for learning and experimentation.
+A simple, statically typed toy programming language built from scratch in C++ for learning and experimentation.
 
 ---
 
 ## Table of Contents
 
-- [About The Project](#about-the-project)
-- [Features](#features)
+- [About](#about)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Building from Source](#building-from-source)
 - [Usage](#usage)
-  - [A Taste of Zenith](#a-taste-of-zenith)
 - [Language Guide](#language-guide)
+  - [Types](#types)
   - [Variables](#variables)
-  - [Functions](#functions)
+  - [Operators](#operators)
   - [Control Flow](#control-flow)
+  - [Loops](#loops)
+  - [Display](#display)
   - [Comments](#comments)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -28,105 +29,164 @@ A modern, simple, and fun toy programming language built for learning and experi
 
 ---
 
-## About The Project
+## About
 
-Zenith is a toy programming language created from scratch. The primary goal of this project is to explore the world of language design, parsing, and interpretation/compilation. It aims to have a clean and intuitive syntax, making it easy for anyone to pick up and write simple programs.
-
-Whether you're a student, a developer curious about compilers, or just looking for a fun project, Zenith provides a great starting point.
-
----
-
-## Features
-
-While still in early development, Zenith aims to support:
-
-- **Simple & Clean Syntax:** Inspired by modern languages to be readable and easy to write.
-- **Statically Typed:** Catch errors at compile-time for more robust code.
-- **Cross-Platform:** Written in portable C/C++, it can be compiled on Windows, macOS, and Linux.
-- **Interpreter-based:** For rapid development and easy debugging.
-- **Extensible:** Designed to be easily extendable with new features and data types.
+Zenith is a toy programming language built from scratch — lexer, parser, and tree-walking interpreter all written in C++. The goal is to explore language design, parsing, and interpretation while keeping the syntax clean and easy to read.
 
 ---
 
 ## Getting Started
 
-Follow these instructions to get a copy of Zenith up and running on your local machine.
-
 ### Prerequisites
 
-The plan is to build Zenith using C++. To contribute to the core language, you will eventually need a modern C++ compiler and `make`.
+A modern C++ compiler and CMake.
 
-- **GCC/G++**
-
-    ```sh
-    sudo apt-get install build-essential
-    ```
+```sh
+sudo apt-get install build-essential cmake
+```
 
 ### Building from Source
 
-This project uses CMake to generate build files.
+```sh
+git clone https://github.com/MyCompilerHatesMe/Zenith.git
+cd Zenith
+cmake -S . -B build
+cmake --build build
+```
 
-1. **Clone the repository:**
-
-    ```sh
-    git clone https://github.com/MyCompilerHatesMe/Zenith.git
-    cd Zenith
-    ```
-
-2. **Configure and build with CMake:**
-
-    ```sh
-    cmake -S . -B build
-    cmake --build build
-    ```
-
-3. The `zenith` executable will be located in the `build/bin/` directory.
+The `zenith` executable will be in `build/bin/`.
 
 ---
 
 ## Usage
 
-Once the interpreter is ready, you will be able to run Zenith programs from source files (e.g., with a `.zen` extension).
+Run any `.zen` file:
 
-### A Taste of Zenith
-
-Here is what "Hello, World!" might look like in Zenith. *Note: This syntax is provisional and may change as development progresses.*
-
-```cpp
-// hello.zen
-print("Hello, World!");
+```sh
+./zenith program.zen
 ```
 
 ---
 
 ## Language Guide
 
-This section outlines the proposed syntax and features for Zenith.
+### Types
 
-### Functions
+Zenith is statically typed. Every variable must be declared with an explicit type.
 
-Functions will be first-class citizens, declared with the `fun` keyword.
+| Keyword  | Description         |
+|----------|---------------------|
+| `int`    | Integer number      |
+| `string` | String of text      |
+| `bool`   | `true` or `false`   |
+| `char`   | Single character    |
+
+### Variables
+
+Variables are declared with a type keyword, a name, and an initializer. Redeclaring a variable in the same scope is a runtime error.
 
 ```js
-int fun add(a, b) {
-    return a + b;
-}
+int x = 10;
+string name = "zenith";
+bool flag = true;
+```
 
-int result = add(5, 10);
-print(result); // Outputs: 15
+Assignment to an existing variable:
+
+```js
+x = 20;
+```
+
+### Operators
+
+**Arithmetic** — integers only, except `+` which also concatenates strings.
+
+```js
+int a = 10 + 3;   // 13
+int b = 10 - 3;   // 7
+int c = 10 * 3;   // 30
+int d = 10 / 3;   // 3  (integer division)
+
+string s = "hello, " + "world";  // "hello, world"
+```
+
+**Comparison**
+
+```js
+x > y
+x >= y
+x < y
+x <= y
+x == y
+x != y
+```
+
+**Logical**
+
+```js
+flag and true
+flag or false
+!flag
 ```
 
 ### Control Flow
 
-Standard `if`/`else` blocks will be used for conditional logic.
+Braces are required for all branches.
 
 ```js
-int number = 10;
-if (number > 5) {
-    print("Number is greater than 5.");
+if (x > 5) {
+    display("big");
+} else if (x == 5) {
+    display("five");
 } else {
-    print("Number is not greater than 5.");
+    display("small");
 }
+```
+
+### Loops
+
+**while**
+
+```js
+int i = 0;
+while (i < 5) {
+    display(i);
+    i = i + 1;
+}
+```
+
+**for** — uses existing variables for init and increment.
+
+```js
+int i = 0;
+for (i = 0; i < 5; i = i + 1) {
+    display(i);
+}
+```
+
+### Blocks and Scope
+
+Blocks create a new scope. Variables declared inside a block are not accessible outside it.
+
+```js
+int x = 1;
+{
+    int y = 2;
+    display(x);  // 1
+    display(y);  // 2
+}
+display(x);  // 1
+// display(y); -- error: undefined variable
+```
+
+### Display
+
+`display` prints a value followed by a newline.
+
+```js
+display("hello, world");
+display(42);
+display(true);
 ```
 
 ### Comments
@@ -134,31 +194,35 @@ if (number > 5) {
 Single-line comments start with `//`.
 
 ```js
-// This is a comment and will be ignored by the interpreter.
+// this is a comment
 ```
 
 ---
 
 ## Roadmap
 
-- [ ] Basic arithmetic operations
-- [ ] Support for loops (`for`, `while`)
-- [ ] More complex data types (arrays, hashmaps)
-- [ ] Standard library for common tasks
-- [ ] A JIT or AOT compiler
-
-See the open issues for a full list of proposed features (and known bugs).
+- [x] Lexer
+- [x] Parser
+- [x] Tree-walking interpreter
+- [x] Static types (`int`, `string`, `bool`, `char`)
+- [x] Variable declarations and assignment
+- [x] Arithmetic and string concatenation
+- [x] Comparison and logical operators
+- [x] `if` / `else if` / `else`
+- [x] `while` and `for` loops
+- [x] Block scoping
+- [ ] Functions (`fun`)
+- [ ] Arrays and hashmaps
+- [ ] Standard library
 
 ---
 
 ## Contributing
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ---
@@ -173,6 +237,5 @@ Copyright (c) 2025 AJ. & PranavNihal
 
 ## Acknowledgements
 
-- Crafting Interpreters
-- Awesome Readme Templates
+- [Crafting Interpreters](https://craftinginterpreters.com/) by Robert Nystrom
 - Anyone whose code was an inspiration!
