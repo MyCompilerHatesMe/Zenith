@@ -56,8 +56,8 @@ struct BlockStatement : Statement {
 // if (expr) block (else)?
 struct IfStatement : Statement {
     unique_ptr<Expression> condition;
-    unique_ptr<Expression> thenBranch;
-    unique_ptr<Expression> elseBranch; // null if no else
+    unique_ptr<Statement> thenBranch;
+    unique_ptr<Statement> elseBranch; // null if no else
 };
 
 // while (expr) block
@@ -71,7 +71,7 @@ struct ForStatement : Statement {
     unique_ptr<Expression> init;
     unique_ptr<Expression> condition;
     unique_ptr<Expression> increment;    
-    unique_ptr<Expression> body;
+    unique_ptr<Statement> body;
 };
 
 // expr;
@@ -84,6 +84,7 @@ class Parser {
     public:
         Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
         // Parses the tokens and returns the root of the AST
+        std::vector<unique_ptr<Statement>> parse();
         unique_ptr<Expression> parseExpression();
 
     private:
@@ -100,6 +101,7 @@ class Parser {
         bool match(TokenType type);
         bool check(TokenType type) const;
         Token consume(TokenType type, const std::string& message);
+        bool isTypeKeyword() const;
 
         // statement parsing
         unique_ptr<Statement> parseStatement();
@@ -127,4 +129,4 @@ class Parser {
         unique_ptr<Expression> parsePrimary();
 };
 
-#endif 
+#endif

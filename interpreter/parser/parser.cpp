@@ -45,6 +45,141 @@ Token Parser::consume(TokenType type, const std::string& message) {
     std::cerr << "[line " << peek().line << "] Error: " << message << std::endl;
     std::exit(1);
 }
+
+bool Parser::isTypeKeyword() const {
+    TokenType t = peek().type;
+    return t == TYPE_INT || t == TYPE_STRING || t == TYPE_BOOL || t == TYPE_CHAR;
+}
+
+
+// top level
+std::vector<unique_ptr<Statement>> Parser::parse() {
+    std::vector<unique_ptr<Statement>> statements;
+    while (!isAtEnd()){
+        statements.push_back(parseStatement());
+    }
+    return statements;
+}
+
+// statement parsing
+unique_ptr<Statement> Parser::parseStatement() {
+    if (isTypeKeyword())        return parseVarDecl();
+    if (match(PRINT))           return parsePrintStatement();
+    if (match(IF))              return parseIfStatement();
+    if (match(WHILE))           return parseWhileStatement();
+    if (match(FOR))             return parseForStatement();
+    if (check(LEFT_BRACE))      return parseBlock();
+    return parseExpressionStatement();
+}
+
+// int x = expr;
+unique_ptr<Statement> Parser::parseVarDecl() {
+    TokenType typeKeyword = advance().type;  // consume type
+    Token name = consume(IDENTIFIER, "Expected variable name after type.");
+    consume(EQUAL, "Expected '=' after variable name.");
+    auto initialiser = parseExpression();
+    consume(SEMICOLON, "Expected ';' after variable declaration.");
+
+    auto decl = std::make_unique<VarDeclStatement>();
+    decl->typeKeyword = typeKeyword;
+    decl->name = name;
+    decl->initialiser = std::move(initialiser);
+    return decl;
+}
+
+// display(expr);
+unique_ptr<Statement> Parser::parsePrintStatement() {
+    consume(LEFT_PAREN, "Expected '(' after 'display'.");
+    auto expr = parseExpression();
+    consume(RIGHT_PAREN, "Expected ')' after expression.");
+    consume(SEMICOLON, "Expected ';' after display statement.");
+
+    auto stmt = std::make_unique<PrintStatement>();
+    stmt->expr = std::move(expr);
+    return stmt;
+}
+
+// if (expr) block (else block)?
+unique_ptr<Statement> Parser::parseIfStatement() {
+    consume(LEFT_PAREN, "Expected '(' after 'if'.");
+    auto condition = parseExpression();
+    consume(RIGHT_PAREN, "Expected ')' after if condition.");
+
+    auto thenBranch = parseBlock();
+
+    unique_ptr<Statement> elseBranch = nullptr;
+    if (match(ELSE)) {
+        // else if is just an else whose body is another if statement
+        if (check(IF)) {
+            advance();  // consume 'if'
+            elseBranch = parseIfStatement();
+        } else {
+            elseBranch = parseBlock();
+        }
+    }
+
+    auto stmt = std::make_unique<IfStatement>();
+    stmt->condition = std::move(condition);
+    stmt->thenBranch = std::move(thenBranch);
+    stmt->elseBranch = std::move(elseBranch);
+    return stmt;
+}
+
+// while (expr) block
+unique_ptr<Statement> Parser::parseWhileStatement() {
+    consume(LEFT_PAREN, "Expected '(' after 'while'.");
+    auto condition = parseExpression();
+    consume(RIGHT_PAREN, "Expected ')' after while condition.");
+    auto body = parseBlock();
+
+    auto stmt = std::make_unique<WhileStatement>();
+    stmt->condition = std::move(condition);
+    stmt->body = std::move(body);
+    return stmt;
+}
+
+// for (expr; expr; expr) block
+unique_ptr<Statement> Parser::parseForStatement() {
+    consume(LEFT_PAREN, "Expected '(' after 'for'.");
+    auto init = parseExpression();
+    consume(SEMICOLON, "Expected ';' after for initializer.");
+    auto condition = parseExpression();
+    consume(SEMICOLON, "Expected ';' after for condition.");
+    auto increment = parseExpression();
+    consume(RIGHT_PAREN, "Expected ')' after for clauses.");
+    auto body = parseBlock();
+
+    auto stmt = std::make_unique<ForStatement>();
+    stmt->init = std::move(init);
+    stmt->condition = std::move(condition);
+    stmt->increment = std::move(increment);
+    stmt->body = std::move(body);
+    return stmt;
+}
+
+// { stmt* }
+unique_ptr<Statement> Parser::parseBlock() {
+    consume(LEFT_BRACE, "Expected '{'.");
+    auto block = std::make_unique<BlockStatement>();
+    while (!check(RIGHT_BRACE) && !isAtEnd()) {
+        block->statements.push_back(parseStatement());
+    }
+    consume(RIGHT_BRACE, "Expected '}' after block.");
+    return block;
+}
+
+// expr;
+unique_ptr<Statement> Parser::parseExpressionStatement() {
+    auto expr = parseExpression();
+    consume(SEMICOLON, "Expected ';' after expression.");
+    auto stmt = std::make_unique<ExpressionStatement>();
+    stmt->expr = std::move(expr);
+    return stmt;
+}
+
+
+
+// expression parsing is below this, i think
 unique_ptr<Expression> Parser::parsePrimary() {
      if(check(TokenType::NUMBER) || check(TokenType::STRING) 
         || check(TRUE) || check(FALSE) || check(NIL)){
