@@ -189,21 +189,21 @@ Token Lexer::identifier() {
 
     // find the identifiers contents.
     // this has to be std::string cuz Lexer::string exists alr
-    std::string text = source.substr(start, current - start);
+    std::string_view text(source.data() + start, current - start);
 
-    auto it = keywords.find(text);
+    auto it = keywords.find(std::string(text));
     
     //if its in the map return a keyword type
     if(it != keywords.end()) return makeToken(it->second);
     //if its not in the map, return an identifier
-    return makeToken(IDENTIFIER, text);
+    return makeToken(IDENTIFIER);
 }
 
 Token Lexer::makeToken(TokenType type) const {
     if(type != END_OF_FILE){
         return {
             type,
-            source.substr(start, current - start),
+            std::string_view(source.data() + start, current - start),
             line,
         };
     }else{
@@ -213,13 +213,4 @@ Token Lexer::makeToken(TokenType type) const {
             line,
         };
     }
-}
-
-// one less method call. yes. i care.
-Token Lexer::makeToken(TokenType type, std::string lexeme) const {
-    return{
-        type,
-        lexeme,
-        line,
-    };
 }

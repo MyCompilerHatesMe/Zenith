@@ -36,7 +36,7 @@ enum TokenType {
 
 struct Token {
     TokenType type;
-    std::string lexeme;
+    std::string_view lexeme;
     int line;
 };
 

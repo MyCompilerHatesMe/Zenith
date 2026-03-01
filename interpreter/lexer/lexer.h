@@ -16,7 +16,7 @@ class Lexer {
     private: 
         std::string source;
         int start = 0; // starting index of any given token
-        int current = 0; // current index of array
+        size_t current = 0; // current index of array
         int line = 1; // line number
 
         inline static const keywordMap_t keywords = {
