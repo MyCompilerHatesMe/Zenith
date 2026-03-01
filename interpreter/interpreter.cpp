@@ -6,12 +6,14 @@
 #include <vector>
 #include "interpreter/lexer/lexer.h"
 #include "interpreter/token.h"
+#include "interpreter/parser/parser.h"
+#include "interpreter/evaluator/evaluator.h"
 
 using std::string;
 using std::ifstream;
 
 string readFile(const string& path);
-std::string tokenTypeToString(TokenType type);
+std::string tokenTypeToString(TokenType type); // not necessary, but i'll leave it
 
 int main(int argc, char* argv[]){
     if(argc != 2){
@@ -26,8 +28,12 @@ int main(int argc, char* argv[]){
 
     Lexer lexer(sourceCode);
     std::vector<Token> tokens = lexer.scanTokens();
-    for(const Token& token : tokens)
-        std::cout << tokenTypeToString(token.type) << " " << token.lexeme << "\n";
+    
+    Parser parser(tokens);
+    auto statements = parser.parse();
+
+    Evaluator evaluator;
+    evaluator.run(statements);
 
 }
 

@@ -20,9 +20,9 @@ class Environment {
         Environment() : enclosing(nullptr) {}
         Environment(Environment* enclosing) : enclosing(enclosing) {}
 
-        void define(const std::string& name, int line) const;
+        void define(const std::string& name, Value value);
 
-        Value get(const std::string& name, Value value, int line);
+        Value get(const std::string& name, int line) const;
 
         void assign(const std::string& name, Value value, int line);
     
@@ -46,9 +46,9 @@ class Evaluator {
         Value evaluate(const Expression& expr);
 
         void typeError(const std::string& msg, int line);
-        void isTruthy(const Value& v);
-        void isEqual(const Value& a, const Value& b);
-        void checkTypeMaatch(TokenType declared, const Value& val, int line);
+        bool isTruthy(const Value& v);
+        bool isEqual(const Value& a, const Value& b);
+        void checkTypeMatch(TokenType declared, const Value& val, int line);
 };
 
 
