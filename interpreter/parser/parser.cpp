@@ -46,16 +46,15 @@ Token Parser::consume(TokenType type, const std::string& message) {
     std::exit(1);
 }
 unique_ptr<Expression> Parser::parsePrimary() {
-     if(check(TokenType::NUMBER) || check(TokenType::STRING)){
-        Token t = advance();
+     if(check(TokenType::NUMBER) || check(TokenType::STRING) 
+        || check(TRUE) || check(FALSE) || check(NIL)){
         auto literal = std::make_unique<LiteralExpression>();
-        literal->op = t;
+        literal->op = advance();
         return literal;
      }
      else if(check(TokenType::IDENTIFIER)){
-        Token t = advance();
         auto identifier = std::make_unique<IdentifierExpression>();
-        identifier->name = t;
+        identifier->name = advance();
         return identifier;
      }
      else if (match(TokenType::LEFT_PAREN)){
@@ -63,9 +62,10 @@ unique_ptr<Expression> Parser::parsePrimary() {
         consume(TokenType::RIGHT_PAREN, "Expect ')' after expression");
         return expr;
      }
-     else{
-        throw std::runtime_error("Invalid Token");
-     }
+     throw std::runtime_error(
+        std::string("[line " + std::to_string(peek().line) + "] Unexpected token '" +
+        std::string(peek().lexeme) + "'.")
+     );
 }
 unique_ptr<Expression> Parser::parseUnary(){
     if(match(TokenType::MINUS) || match(TokenType::BANG)){
