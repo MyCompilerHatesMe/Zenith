@@ -238,4 +238,3 @@ Copyright (c) 2025 AJ. & PranavNihal
 ## Acknowledgements
 
 - [Crafting Interpreters](https://craftinginterpreters.com/) by Robert Nystrom
-- Anyone whose code was an inspiration!
